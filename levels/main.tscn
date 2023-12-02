@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://dsmhyt1x7goyp"]
+
+[ext_resource type="PackedScene" uid="uid://d2axw5r72d7jy" path="res://prefabs/map_grid.tscn" id="1_scf71"]
+[ext_resource type="Script" path="res://scripts/MainSceneNode.cs" id="1_vvtr1"]
+[ext_resource type="Resource" uid="uid://bukjuww85mqwa" path="res://data/test_setting.tres" id="2_0dp8w"]
+
+[node name="main" type="Node2D" node_paths=PackedStringArray("GridNode", "UserMessageNode")]
+script = ExtResource("1_vvtr1")
+GridNode = NodePath("map_grid")
+UserMessageNode = NodePath("Label")
+Setting = ExtResource("2_0dp8w")
+
+[node name="map_grid" parent="." instance=ExtResource("1_scf71")]
+position = Vector2(143, 328)
+scale = Vector2(2, 2)
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 493.0
+offset_top = 19.0
+offset_right = 691.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "This is a sample text label"

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://clundgjnoa8ir"]
+
+[ext_resource type="Script" path="res://scripts/MapTileNode.cs" id="1_vua8p"]
+
+[node name="map_tile" type="Node2D"]
+script = ExtResource("1_vua8p")

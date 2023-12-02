@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bue3dcgy1ws8o"]
+
+[ext_resource type="Texture2D" uid="uid://bbn83ij2stt8f" path="res://icon.svg" id="1_5ncy0"]
+[ext_resource type="Script" path="res://scripts/RotatingSprite2D.cs" id="2_o8yqj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_11l38"]
+size = Vector2(127, 128.5)
+
+[node name="player" type="Node2D"]
+script = ExtResource("2_o8yqj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, -66.58)
+texture = ExtResource("1_5ncy0")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(45, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(-44.5, -66.25)
+shape = SubResource("RectangleShape2D_11l38")

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://bukjuww85mqwa"]
+
+[ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_type_tower.tres" id="1_xg0bx"]
+[ext_resource type="Script" path="res://scripts/BoardSetting.cs" id="2_0m1wf"]
+
+[resource]
+script = ExtResource("2_0m1wf")
+Position = Vector2i(4, 4)
+Type = ExtResource("1_xg0bx")
