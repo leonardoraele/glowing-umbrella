@@ -1,23 +1,25 @@
 using Godot;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Raele;
 
-public partial class MainSceneController
-{
-	public readonly GridInfo Grid = new GridInfo();
-	public TurnPhase? TurnPhase;
-	public TurnPhase? NextTurnPhase;
+public interface ReadOnlyMainSceneController {
+	// PROPERTIES
+	public ReadOnlyGridInfo Grid { get; }
+	public UnitInfo? SelectedUnit { get; }
 
-	public UnitInfo? SelectedUnit { get; private set; } = null;
-
+	// EVENTS
+	public event Func<Task>? GameReadyEvent;
 	public event Func<UnitMovedEventData, Task>? UnitMovedEvent;
 	public event Func<UnitInfo?, Task>? SelectionChangedEvent;
 	public event Func<UnitSelectionRequest, Task<UnitInfo>>? UnitSelectionRequestEvent;
 	public event Func<TileSelectionRequest, Task<Vector2I>>? TileSelectionRequestEvent;
 
+	// METHODS
+	public void Start();
+
+	// DATA ENCAPSULATION TYPES
 	public class UnitMovedEventData {
 		UnitInfo Unit;
 		Vector2I Origin;
@@ -38,59 +40,88 @@ public partial class MainSceneController
 		public TileSelectionRequest(Vector2I[] validPositions)
 			=> ValidPositions = validPositions;
 	}
+}
 
-	public interface ITurnController {
-		public MainSceneController SceneController { get; }
-		public Task<UnitInfo> RequestUnitSelection(UnitSelectionRequest request);
-		public Task<Vector2I> RequestTileSelection(TileSelectionRequest request);
+public partial class MainSceneController : ReadOnlyMainSceneController
+{
+	public readonly GridInfo grid = new GridInfo();
+	public ReadOnlyGridInfo Grid => this.grid;
+
+	public UnitInfo? SelectedUnit { get; private set; } = null;
+
+	public event Func<Task>? GameReadyEvent;
+	public event Func<ReadOnlyMainSceneController.UnitMovedEventData, Task>? UnitMovedEvent;
+	public event Func<UnitInfo?, Task>? SelectionChangedEvent;
+	public event Func<ReadOnlyMainSceneController.UnitSelectionRequest, Task<UnitInfo>>? UnitSelectionRequestEvent;
+	public event Func<ReadOnlyMainSceneController.TileSelectionRequest, Task<Vector2I>>? TileSelectionRequestEvent;
+
+	private BoardSetting Setting;
+
+	public static ReadOnlyMainSceneController Create(BoardSetting setting) {
+		MainSceneController controller = new MainSceneController(setting);
+		return controller;
 	}
 
-	private class TurnController : ITurnController {
-		public MainSceneController SceneController { get; private set; }
-		public TurnController(MainSceneController controller)
-			=> SceneController = controller;
-		public void ChangePhase(TurnPhase TurnPhase)
-			=> this.SceneController.TurnPhase = TurnPhase;
-		public Task<UnitInfo> RequestUnitSelection(UnitSelectionRequest request)
-			=> this.SceneController.UnitSelectionRequestEvent?.Invoke(request)
-			?? Task.FromCanceled<UnitInfo>(CancellationToken.None);
-		public Task<Vector2I> RequestTileSelection(TileSelectionRequest request)
-			=> this.SceneController.TileSelectionRequestEvent?.Invoke(request)
-			?? Task.FromCanceled<Vector2I>(CancellationToken.None);
+	private MainSceneController(BoardSetting setting)
+		=> this.Setting = setting;
+
+	public async void Start() {
+		this.Setup();
+		if (this.GameReadyEvent != null) {
+			await this.GameReadyEvent.Invoke();
+		}
+		await this.ProcessMainLoop();
 	}
 
-	public MainSceneController() {
-		this.NextTurnPhase = new PlayerTurnPhase(new TurnController(this));
+	public void Setup() {
+		this.grid.AddUnit(new UnitInfo(this.Setting.Type), this.Setting.Position);
 	}
 
-	public async void Begin() {
-		while (this.NextTurnPhase != null) {
-			this.TurnPhase = this.NextTurnPhase;
-			this.NextTurnPhase = null;
-			try {
-				await this.TurnPhase.Begin();
-			} catch(Exception e) {
-				GD.PushError(e);
-				// TODO Probably should emit some event like "Reset" so that the UI can react
-			}
+	public async Task ProcessMainLoop() {
+		while (true) {
+			await this.ProcessPlayerTurn();
 		}
 	}
 
-	public void Setup(BoardSetting setting) {
-		this.Grid.Clear();
-		this.Grid.AddUnit(new UnitInfo(setting.Type), setting.Position);
+	public async Task ProcessPlayerTurn() {
+		GD.Print("Player turn started.");
+		while (true) {
+			await this.EndSelection();
+			UnitInfo? unit;
+			try {
+				unit = await this.UnitSelectionRequestEvent(new ReadOnlyMainSceneController.UnitSelectionRequest() {
+					selectionCriteria = (UnitInfo unit) => unit.Team == UnitTeam.Player,
+				});
+			} catch (OperationCanceledException e) {
+				continue;
+			}
+			await this.SetSelection(unit);
+			Vector2I[] validPositions = unit.Type.GetMoveOptions(unit, this.Grid);
+			Vector2I? destination;
+			try {
+				destination = await this.TileSelectionRequestEvent(
+					new ReadOnlyMainSceneController.TileSelectionRequest(validPositions)
+				);
+			} catch(OperationCanceledException e) {
+				continue;
+			}
+			await this.PerformMove(unit, destination.Value);
+			break;
+		}
+		GD.Print("Player turn ended.");
 	}
 
 	public async Task PerformMove(UnitInfo unit, Vector2I destination) {
 		GD.Print("Unit moved from position", unit.Position, "to position", destination);
 		Vector2I previousPosition = unit.Position;
-		this.Grid.MoveUnit(unit, destination);
+		this.grid.MoveUnit(unit, destination);
 		if (this.UnitMovedEvent != null) {
-			await this.UnitMovedEvent(new UnitMovedEventData(unit, previousPosition));
+			await this.UnitMovedEvent(new ReadOnlyMainSceneController.UnitMovedEventData(unit, previousPosition));
 		}
 	}
 
 	public async Task SetSelection(UnitInfo unit) {
+		GD.Print("Unit selected. Unit:", unit);
 		this.SelectedUnit = unit;
 		if (this.SelectionChangedEvent != null) {
 			await this.SelectionChangedEvent(this.SelectedUnit);

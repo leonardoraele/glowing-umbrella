@@ -11,20 +11,24 @@ public partial class MainSceneNode : Node2D
 	[Export] private Label UserMessageNode;
 	[Export] private BoardSetting Setting;
 
-	private MainSceneController Controller = new MainSceneController();
+	private ReadOnlyMainSceneController Controller = null!; // Controller is created on _Ready()
 
 	public override void _Ready() {
 		this.UserMessageNode.Hide();
+		this.Controller = MainSceneController.Create(this.Setting);
+		this.Controller.GameReadyEvent += this.OnGameReady;
 		this.Controller.UnitMovedEvent += this.OnUnitMoved;
 		this.Controller.SelectionChangedEvent += this.OnSelectionChanged;
 		this.Controller.UnitSelectionRequestEvent += this.OnUnitSelectionRequested;
 		this.Controller.TileSelectionRequestEvent += this.OnTileSelectionRequested;
-		this.Controller.Setup(this.Setting);
-		this.GridNode.Refresh(this.Controller.Grid);
-		this.Controller.Begin();
+		this.Controller.Start();
 	}
 
-	private async Task OnUnitMoved(MainSceneController.UnitMovedEventData eventData) {
+	private async Task OnGameReady() {
+		this.GridNode.Refresh(this.Controller.Grid);
+	}
+
+	private async Task OnUnitMoved(ReadOnlyMainSceneController.UnitMovedEventData eventData) {
 		this.GridNode.Refresh(this.Controller.Grid);
 	}
 
@@ -32,7 +36,7 @@ public partial class MainSceneNode : Node2D
 		// TODO
 	}
 
-	private async Task<UnitInfo> OnUnitSelectionRequested(MainSceneController.UnitSelectionRequest request) {
+	private async Task<UnitInfo> OnUnitSelectionRequested(ReadOnlyMainSceneController.UnitSelectionRequest request) {
 		this.UserMessageNode.Text = "Please select a unit.";
 		this.UserMessageNode.Show();
 		UnitInfo? unit = null;
@@ -50,7 +54,7 @@ public partial class MainSceneNode : Node2D
 		return unit;
 	}
 
-	private async Task<Vector2I> OnTileSelectionRequested(MainSceneController.TileSelectionRequest request) {
+	private async Task<Vector2I> OnTileSelectionRequested(ReadOnlyMainSceneController.TileSelectionRequest request) {
 		this.UserMessageNode.Text = "Please select a target.";
 		this.UserMessageNode.Show();
 		try {
