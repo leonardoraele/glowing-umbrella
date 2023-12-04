@@ -43,11 +43,9 @@ public partial class MainSceneNode : Node2D
 		while (unit == null) {
 			Vector2I selectedPosition = await this.GridNode.WaitForSignal<Vector2I>(MapGridNode.SignalName.TileClicked);
 			if (this.Controller.Grid.GetUnitAtPosition(selectedPosition, out unit) && (request.selectionCriteria?.Invoke(unit) ?? true)) {
-				// TODO
-				// this.Soundboard.PlaySE("accept");
+				// this.Soundboard.PlaySE("accept"); // TODO
 			} else {
-				// TODO
-				// this.Soundboard.PlaySE("reject");
+				// this.Soundboard.PlaySE("reject"); // TODO
 			}
 		}
 		this.UserMessageNode.Hide();

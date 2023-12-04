@@ -74,7 +74,9 @@ public partial class MainSceneController : ReadOnlyMainSceneController
 	}
 
 	public void Setup() {
-		this.grid.AddUnit(new UnitInfo(this.Setting.Type), this.Setting.Position);
+		this.Setting.Units.ForEach(unit =>
+			this.grid.AddUnit(new UnitInfo(unit.Type) { Team = unit.Team }, unit.Position)
+		);
 	}
 
 	public async Task ProcessMainLoop() {

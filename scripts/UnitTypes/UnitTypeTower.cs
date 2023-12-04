@@ -5,28 +5,10 @@ namespace Raele;
 
 public partial class UnitTypeTower : UnitType {
 	public override Vector2I[] GetMoveOptions(UnitInfo unit, ReadOnlyGridInfo grid) {
-		return Enumerable.Empty<Vector2I>()
-			.Concat(
-				// Right
-				Enumerable.Range(1, grid.Width - unit.Position.X)
-					.Select(i => new Vector2I(unit.Position.X + i, unit.Position.Y))
-			)
-			.Concat(
-				// Left
-				Enumerable.Range(1, unit.Position.X)
-					.Select(i => new Vector2I(unit.Position.X - i, unit.Position.Y))
-			)
-			.Concat(
-				// Up
-				Enumerable.Range(1, grid.Height - unit.Position.Y)
-					.Select(i => new Vector2I(unit.Position.X, unit.Position.Y + i))
-			)
-			.Concat(
-				// Down
-				Enumerable.Range(1, unit.Position.Y)
-					.Select(i => new Vector2I(unit.Position.X, unit.Position.Y - i))
-			)
-			.Where(position => !grid.GetUnitAtPosition(position, out _))
+		return Enumerable.Range(0, 8)
+			.SelectMany(x => Enumerable.Range(0, 8).Select(y => new Vector2I(x, y)))
+			.Where(position => position.X == unit.Position.X || position.Y == unit.Position.Y)
+			.Where(position => !grid.GetUnitAtPosition(position, out UnitInfo? other) || other.Team != unit.Team)
 			.ToArray();
 	}
 }

@@ -1,9 +1,15 @@
-[gd_resource type="Resource" load_steps=3 format=3 uid="uid://bukjuww85mqwa"]
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://bukjuww85mqwa"]
 
-[ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_type_tower.tres" id="1_xg0bx"]
+[ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_type_tower.tres" id="1_qp0gx"]
 [ext_resource type="Script" path="res://scripts/BoardSetting.cs" id="2_0m1wf"]
+[ext_resource type="Script" path="res://scripts/UnitSettings.cs" id="2_eoik2"]
+
+[sub_resource type="Resource" id="Resource_fjw76"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(4, 4)
+Type = ExtResource("1_qp0gx")
+Team = 0
 
 [resource]
 script = ExtResource("2_0m1wf")
-Position = Vector2i(4, 4)
-Type = ExtResource("1_xg0bx")
+Units = Array[Object]([SubResource("Resource_fjw76")])
