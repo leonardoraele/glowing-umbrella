@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Raele;
@@ -13,6 +14,8 @@ public partial class MainSceneNode : Node2D
 
 	private ReadOnlyMainSceneController Controller = null!; // Controller is created on _Ready()
 
+	[Signal] public delegate void ActionCancelledEventHandler();
+
 	public override void _Ready() {
 		this.UserMessageNode.Hide();
 		this.Controller = MainSceneController.Create(this.Setting);
@@ -24,7 +27,14 @@ public partial class MainSceneNode : Node2D
 		this.Controller.Start();
 	}
 
-	private async Task OnGameReady() {
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("ui_cancel")) {
+			this.EmitSignal(SignalName.ActionCancelled);
+		}
+    }
+
+    private async Task OnGameReady() {
 		this.GridNode.Refresh(this.Controller.Grid);
 	}
 
@@ -39,17 +49,31 @@ public partial class MainSceneNode : Node2D
 	private async Task<UnitInfo> OnUnitSelectionRequested(ReadOnlyMainSceneController.UnitSelectionRequest request) {
 		this.UserMessageNode.Text = "Please select a unit.";
 		this.UserMessageNode.Show();
-		UnitInfo? unit = null;
-		while (unit == null) {
-			Vector2I selectedPosition = await this.GridNode.WaitForSignal<Vector2I>(MapGridNode.SignalName.TileClicked);
-			if (this.Controller.Grid.GetUnitAtPosition(selectedPosition, out unit) && (request.selectionCriteria?.Invoke(unit) ?? true)) {
-				// this.Soundboard.PlaySE("accept"); // TODO
-			} else {
-				// this.Soundboard.PlaySE("reject"); // TODO
+		try {
+			while (true) {
+				TaskCompletionSource<Vector2I> source = new TaskCompletionSource<Vector2I>();
+				Task waitUserSelection = this.GridNode.WhenSignalEmitted<Vector2I>(MapGridNode.SignalName.TileClicked)
+					.ContinueWith(t => source.TrySetResult(t.Result));
+				Task waitUserCancellation = this.WhenSignalEmitted(SignalName.ActionCancelled)
+					.ContinueWith(t => source.SetCanceled());
+				Vector2I? selectedPosition;
+				try {
+					selectedPosition = await source.Task;
+				} catch(OperationCanceledException e) {
+					// this.Soundboard.PlaySE("cancel"); // TODO
+					throw e;
+				}
+
+				if (this.Controller.Grid.GetUnitAtPosition(selectedPosition.Value, out UnitInfo? unit) && (request.selectionCriteria?.Invoke(unit) ?? true)) {
+					// this.Soundboard.PlaySE("accept"); // TODO
+					return unit;
+				} else {
+					// this.Soundboard.PlaySE("reject"); // TODO
+				}
 			}
+		} finally {
+			this.UserMessageNode.Hide();
 		}
-		this.UserMessageNode.Hide();
-		return unit;
 	}
 
 	private async Task<Vector2I> OnTileSelectionRequested(ReadOnlyMainSceneController.TileSelectionRequest request) {
@@ -58,10 +82,22 @@ public partial class MainSceneNode : Node2D
 		this.GridNode.HighlightPositions(request.ValidPositions);
 		try {
 			while (true) {
-				Vector2I selectedPosition = await this.GridNode.WaitForSignal<Vector2I>(MapGridNode.SignalName.TileClicked);
-				if (request.ValidPositions.Contains(selectedPosition)) {
+				TaskCompletionSource<Vector2I> source = new TaskCompletionSource<Vector2I>();
+				Task waitUserSelection = this.GridNode.WhenSignalEmitted<Vector2I>(MapGridNode.SignalName.TileClicked)
+					.ContinueWith(t => source.TrySetResult(t.Result));
+				Task waitUserCancellation = this.WhenSignalEmitted(SignalName.ActionCancelled)
+					.ContinueWith(t => source.TrySetCanceled());
+				Vector2I? selectedPosition;
+				try {
+					selectedPosition = await source.Task;
+				} catch (OperationCanceledException e) {
+					// this.Soundboard.PlaySE("cancel"); // TODO
+					throw e;
+				}
+
+				if (request.ValidPositions.Contains(selectedPosition.Value)) {
 					// this.Soundboard.PlaySE("accept"); // TODO
-					return selectedPosition;
+					return selectedPosition.Value;
 				} else {
 					// this.Soundboard.PlaySE("reject"); // TODO
 				}
