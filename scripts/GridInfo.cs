@@ -10,9 +10,10 @@ public interface ReadOnlyGridInfo {
 	public int Width { get; }
 	public int Height { get; }
 	public IEnumerable<UnitInfo> Units { get; }
+	public bool CheckPositionIsOccupied(Vector2I position);
 	public bool GetUnitAtPosition(Vector2I position, [NotNullWhen(true)] out UnitInfo? unit);
 	public bool GetUnitPosition(UnitInfo unit, [NotNullWhen(true)] out Vector2I? position);
-	public bool IsInBounds(Vector2I position);
+	public bool CheckPositionIsInBounds(Vector2I position);
 }
 
 public class GridInfo : ReadOnlyGridInfo {
@@ -26,6 +27,10 @@ public class GridInfo : ReadOnlyGridInfo {
 	public GridInfo(int width = 8, int height = 8)
 		=> (Width, Height) = (width, height);
 
+	public bool CheckPositionIsOccupied(Vector2I position) {
+		return this.GetUnitAtPosition(position, out UnitInfo? _);
+	}
+
 	public bool GetUnitAtPosition(Vector2I position, [NotNullWhen(true)] out UnitInfo? unit) {
 		unit = this.units.FirstOrDefault(unit => unit.Position == position);
 		return unit != null;
@@ -38,7 +43,7 @@ public class GridInfo : ReadOnlyGridInfo {
 		return position != null;
 	}
 
-	public bool IsInBounds(Vector2I position) {
+	public bool CheckPositionIsInBounds(Vector2I position) {
 		return position.X >= 0 && position.X < this.Width
 			&& position.Y >= 0 && position.Y < this.Height;
 	}

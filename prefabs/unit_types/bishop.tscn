@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://li030o1wfec7"]
+
+[ext_resource type="Script" path="res://scripts/MapUnitNode.cs" id="1_1ndio"]
+[ext_resource type="Texture2D" uid="uid://cttt7cwnq58bf" path="res://textures/chess_pieces.png" id="2_76ndq"]
+
+[node name="bishop" type="Node2D"]
+script = ExtResource("1_1ndio")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, -19)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_76ndq")
+region_enabled = true
+region_rect = Rect2(218.71, 7.77658, 51.5365, 83.2035)

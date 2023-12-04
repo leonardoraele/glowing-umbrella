@@ -1,6 +1,7 @@
 using BidirectionalMap;
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -34,7 +35,7 @@ public partial class MapGridNode : Node2D
 
 	public bool GetTile(Vector2I position, [NotNullWhen(true)] out MapTileNode? tile) {
 		int index = this.GetIndex(position);
-		if (index < this.Tiles.Length) {
+		if (index >= 0 && index < this.Tiles.Length) {
 			tile = this.Tiles[index];
 			return true;
 		}
@@ -43,7 +44,7 @@ public partial class MapGridNode : Node2D
 	}
 
 	public static int GetTileZIndex(Vector2I position) {
-		return (position.Y - position.X) * 10;
+		return (position.X - position.Y) * 10;
 	}
 
 	public static int GetUnitZIndex(Vector2I position) {
@@ -79,8 +80,9 @@ public partial class MapGridNode : Node2D
 		}
 
 		// Free tiles that were not moved to the new tiles array
+		HashSet<MapTileNode> set = new HashSet<MapTileNode>(newTiles);
 		this.Tiles.AsEnumerable()
-			.Where(tile => !newTiles.AsEnumerable().Contains(tile))
+			.Where(tile => !set.Contains(tile))
 			.ForEach(tile => tile.QueueFree());
 
 		// Update fields
@@ -89,7 +91,8 @@ public partial class MapGridNode : Node2D
 
 	private MapTileNode CreateTile(Vector2I position) {
 		MapTileNode tile = this.MapTilePrefab.Instantiate<MapTileNode>();
-		tile.Position = new Vector2(position.X * 32 + position.Y * 32, position.X * -16 + position.Y * 16);
+		tile.Position = new Vector2(position.X * 32 + position.Y * 32, position.X * 16 + position.Y * -16);
+		tile.Name = $"{typeof(MapTileNode).Name} [{position.X}, {position.Y}]";
 		tile.ZIndex = MapGridNode.GetTileZIndex(position);
 		tile.TileClicked += () => this.OnTileClicked(position);
 		return tile;
@@ -153,4 +156,12 @@ public partial class MapGridNode : Node2D
 		this.AddChild(node);
 		this.UnitMap.Add(unit, node);
 	}
+
+    public void HighlightPositions(Vector2I[] positions)
+		=> positions.Select(position => this.GetTile(position, out MapTileNode? tile) ? tile : null)
+			.Where(tile => tile != null)
+			.ForEach(tile => tile!.Highlighted = true);
+
+    public void ResetHighlights()
+		=> this.Tiles.ForEach(tile => tile.Highlighted = false);
 }

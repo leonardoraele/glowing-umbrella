@@ -1,8 +1,0 @@
-[gd_resource type="Resource" load_steps=3 format=3 uid="uid://4juigi10cjsu"]
-
-[ext_resource type="PackedScene" uid="uid://cgk7oklyb1v52" path="res://data/tower.tscn" id="1_86mny"]
-[ext_resource type="Script" path="res://scripts/UnitTypes/UnitTypeTower.cs" id="1_gpsfg"]
-
-[resource]
-script = ExtResource("1_gpsfg")
-Prefab = ExtResource("1_86mny")

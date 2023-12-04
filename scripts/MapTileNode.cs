@@ -14,11 +14,14 @@ public partial class MapTileNode : Node2D
 	[Export] private string LeftColor = "lightgray";
 	[Export] private string OutlineColor = "black";
 	[Export] private string HoveredColor = "darkgray";
+	[Export] private string HighlightColor = "darkgreen";
+	[Export] private string HoveredHighlightColor = "green";
 	[Export] private float OutlineWidth = 1;
 
 	public bool Hovered { get; private set; }
+    public bool Highlighted = false;
 
-	[Signal] public delegate void TileClickedEventHandler();
+    [Signal] public delegate void TileClickedEventHandler();
 
 	public override void _Draw() {
 		this.DrawColoredPolygon(
@@ -69,8 +72,12 @@ public partial class MapTileNode : Node2D
     public override void _Process(double delta)
     {
         this.Modulate = this.Hovered
-			? Color.FromString(this.HoveredColor, default)
-			: Color.FromString("white", default);
+			? this.Highlighted
+				? Color.FromString(this.HoveredHighlightColor, default)
+				: Color.FromString(this.HoveredColor, default)
+			: this.Highlighted
+				? Color.FromString(this.HighlightColor, default)
+				: Color.FromString("white", default);
     }
 
     public override void _Input(InputEvent inputEvent)

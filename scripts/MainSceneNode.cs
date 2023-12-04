@@ -55,6 +55,7 @@ public partial class MainSceneNode : Node2D
 	private async Task<Vector2I> OnTileSelectionRequested(ReadOnlyMainSceneController.TileSelectionRequest request) {
 		this.UserMessageNode.Text = "Please select a target.";
 		this.UserMessageNode.Show();
+		this.GridNode.HighlightPositions(request.ValidPositions);
 		try {
 			while (true) {
 				Vector2I selectedPosition = await this.GridNode.WaitForSignal<Vector2I>(MapGridNode.SignalName.TileClicked);
@@ -67,6 +68,7 @@ public partial class MainSceneNode : Node2D
 			}
 		} finally {
 			this.UserMessageNode.Hide();
+			this.GridNode.ResetHighlights();
 		}
 	}
 }

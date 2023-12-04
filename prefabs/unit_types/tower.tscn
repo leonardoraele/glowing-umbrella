@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgk7oklyb1v52"]
+
+[ext_resource type="Script" path="res://scripts/MapUnitNode.cs" id="1_bfpp5"]
+[ext_resource type="Texture2D" uid="uid://cttt7cwnq58bf" path="res://textures/chess_pieces.png" id="2_wo08x"]
+
+[node name="tower" type="Node2D"]
+script = ExtResource("1_bfpp5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_wo08x")
+region_enabled = true
+region_rect = Rect2(81.486, 13.9858, 49.6737, 78.857)

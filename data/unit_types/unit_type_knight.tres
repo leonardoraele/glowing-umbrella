@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://da5daqr6f3gg5"]
+
+[ext_resource type="Script" path="res://scripts/UnitTypes/UnitTypeKnight.cs" id="1_7go77"]
+[ext_resource type="PackedScene" uid="uid://bkikgxh8s1r44" path="res://prefabs/unit_types/knight.tscn" id="1_o3jae"]
+
+[resource]
+script = ExtResource("1_7go77")
+Prefab = ExtResource("1_o3jae")

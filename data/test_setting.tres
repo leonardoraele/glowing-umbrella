@@ -1,15 +1,110 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://bukjuww85mqwa"]
+[gd_resource type="Resource" load_steps=25 format=3 uid="uid://bukjuww85mqwa"]
 
-[ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_type_tower.tres" id="1_qp0gx"]
+[ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_types/unit_type_tower.tres" id="1_emknk"]
 [ext_resource type="Script" path="res://scripts/BoardSetting.cs" id="2_0m1wf"]
 [ext_resource type="Script" path="res://scripts/UnitSettings.cs" id="2_eoik2"]
+[ext_resource type="Resource" uid="uid://da5daqr6f3gg5" path="res://data/unit_types/unit_type_knight.tres" id="3_v1bpa"]
+[ext_resource type="Resource" uid="uid://vhuor58tgx1m" path="res://data/unit_types/unit_type_bishop.tres" id="4_dbjs3"]
+[ext_resource type="Resource" uid="uid://dbqc7ev7y7d83" path="res://data/unit_types/unit_type_queen.tres" id="5_uf53r"]
+[ext_resource type="Resource" uid="uid://b82yor1luhmpv" path="res://data/unit_types/unit_type_king.tres" id="6_6cpwi"]
+[ext_resource type="Resource" uid="uid://kaqqotmyrf64" path="res://data/unit_types/unit_type_pawn.tres" id="7_8jtw0"]
 
 [sub_resource type="Resource" id="Resource_fjw76"]
 script = ExtResource("2_eoik2")
-Position = Vector2i(4, 4)
-Type = ExtResource("1_qp0gx")
+Position = Vector2i(0, 0)
+Type = ExtResource("1_emknk")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_0ysud"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(1, 0)
+Type = ExtResource("3_v1bpa")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_c3ebc"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(2, 0)
+Type = ExtResource("4_dbjs3")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_6cj0h"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(3, 0)
+Type = ExtResource("5_uf53r")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_x34x5"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(4, 0)
+Type = ExtResource("6_6cpwi")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_3jm8b"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(5, 0)
+Type = ExtResource("4_dbjs3")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_1km1y"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(6, 0)
+Type = ExtResource("3_v1bpa")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_uj7xo"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(7, 0)
+Type = ExtResource("1_emknk")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_3xoqg"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(0, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_yc432"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(1, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_lgxnk"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(2, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_b82cs"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(3, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_xjyy0"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(4, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_bbj6x"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(5, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_7fxcl"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(6, 1)
+Type = ExtResource("7_8jtw0")
+Team = 0
+
+[sub_resource type="Resource" id="Resource_srera"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(7, 1)
+Type = ExtResource("7_8jtw0")
 Team = 0
 
 [resource]
 script = ExtResource("2_0m1wf")
-Units = Array[Object]([SubResource("Resource_fjw76")])
+Units = Array[Object]([SubResource("Resource_fjw76"), SubResource("Resource_0ysud"), SubResource("Resource_c3ebc"), SubResource("Resource_6cj0h"), SubResource("Resource_x34x5"), SubResource("Resource_3jm8b"), SubResource("Resource_1km1y"), SubResource("Resource_uj7xo"), SubResource("Resource_3xoqg"), SubResource("Resource_yc432"), SubResource("Resource_lgxnk"), SubResource("Resource_b82cs"), SubResource("Resource_xjyy0"), SubResource("Resource_bbj6x"), SubResource("Resource_7fxcl"), SubResource("Resource_srera")])
