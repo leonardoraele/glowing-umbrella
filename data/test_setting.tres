@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=25 format=3 uid="uid://bukjuww85mqwa"]
+[gd_resource type="Resource" load_steps=33 format=3 uid="uid://bukjuww85mqwa"]
 
 [ext_resource type="Resource" uid="uid://4juigi10cjsu" path="res://data/unit_types/unit_type_tower.tres" id="1_emknk"]
 [ext_resource type="Script" path="res://scripts/BoardSetting.cs" id="2_0m1wf"]
@@ -105,6 +105,54 @@ Position = Vector2i(7, 1)
 Type = ExtResource("7_8jtw0")
 Team = 0
 
+[sub_resource type="Resource" id="Resource_0hc76"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(0, 7)
+Type = ExtResource("1_emknk")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_k28cg"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(1, 7)
+Type = ExtResource("3_v1bpa")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_poi1w"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(2, 7)
+Type = ExtResource("4_dbjs3")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_tfnoc"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(3, 7)
+Type = ExtResource("5_uf53r")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_wt1jh"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(4, 7)
+Type = ExtResource("6_6cpwi")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_kbjxb"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(5, 7)
+Type = ExtResource("4_dbjs3")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_h7j32"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(6, 7)
+Type = ExtResource("3_v1bpa")
+Team = 1
+
+[sub_resource type="Resource" id="Resource_w82pt"]
+script = ExtResource("2_eoik2")
+Position = Vector2i(7, 7)
+Type = ExtResource("1_emknk")
+Team = 1
+
 [resource]
 script = ExtResource("2_0m1wf")
-Units = Array[Object]([SubResource("Resource_fjw76"), SubResource("Resource_0ysud"), SubResource("Resource_c3ebc"), SubResource("Resource_6cj0h"), SubResource("Resource_x34x5"), SubResource("Resource_3jm8b"), SubResource("Resource_1km1y"), SubResource("Resource_uj7xo"), SubResource("Resource_3xoqg"), SubResource("Resource_yc432"), SubResource("Resource_lgxnk"), SubResource("Resource_b82cs"), SubResource("Resource_xjyy0"), SubResource("Resource_bbj6x"), SubResource("Resource_7fxcl"), SubResource("Resource_srera")])
+Units = Array[Object]([SubResource("Resource_fjw76"), SubResource("Resource_0ysud"), SubResource("Resource_c3ebc"), SubResource("Resource_6cj0h"), SubResource("Resource_x34x5"), SubResource("Resource_3jm8b"), SubResource("Resource_1km1y"), SubResource("Resource_uj7xo"), SubResource("Resource_3xoqg"), SubResource("Resource_yc432"), SubResource("Resource_lgxnk"), SubResource("Resource_b82cs"), SubResource("Resource_xjyy0"), SubResource("Resource_bbj6x"), SubResource("Resource_7fxcl"), SubResource("Resource_srera"), SubResource("Resource_0hc76"), SubResource("Resource_k28cg"), SubResource("Resource_poi1w"), SubResource("Resource_tfnoc"), SubResource("Resource_wt1jh"), SubResource("Resource_kbjxb"), SubResource("Resource_h7j32"), SubResource("Resource_w82pt")])

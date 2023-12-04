@@ -3,10 +3,13 @@
 [ext_resource type="Script" path="res://scripts/MapUnitNode.cs" id="1_qnoqu"]
 [ext_resource type="Texture2D" uid="uid://cttt7cwnq58bf" path="res://textures/chess_pieces.png" id="2_ueg88"]
 
-[node name="queen" type="Node2D"]
+[node name="queen" type="Node2D" node_paths=PackedStringArray("Sprite")]
 script = ExtResource("1_qnoqu")
+Sprite = NodePath("Node2D")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D"]
 position = Vector2(1, -17)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("2_ueg88")

@@ -24,6 +24,7 @@ public partial class MainSceneNode : Node2D
 		this.Controller.SelectionChangedEvent += this.OnSelectionChanged;
 		this.Controller.UnitSelectionRequestEvent += this.OnUnitSelectionRequested;
 		this.Controller.TileSelectionRequestEvent += this.OnTileSelectionRequested;
+		this.Controller.GameEndedEvent += this.OnGameEnded;
 		this.Controller.Start();
 	}
 
@@ -42,8 +43,13 @@ public partial class MainSceneNode : Node2D
 		this.GridNode.Refresh(this.Controller.Grid);
 	}
 
-	private async Task OnSelectionChanged(UnitInfo? unit) {
-		// TODO
+	private async Task OnSelectionChanged(UnitInfo? newSelection, UnitInfo? previousSelection) {
+		if (previousSelection != null && this.GridNode.GetUnitNode(previousSelection, out MapUnitNode? previousSelectionNode)) {
+			previousSelectionNode.Selected = false;
+		}
+		if (newSelection != null && this.GridNode.GetUnitNode(newSelection, out MapUnitNode? newSelectionNode)) {
+			newSelectionNode.Selected = true;
+		}
 	}
 
 	private async Task<UnitInfo> OnUnitSelectionRequested(ReadOnlyMainSceneController.UnitSelectionRequest request) {
@@ -106,5 +112,13 @@ public partial class MainSceneNode : Node2D
 			this.UserMessageNode.Hide();
 			this.GridNode.ResetHighlights();
 		}
+	}
+
+	private Task OnGameEnded(ReadOnlyMainSceneController.GameEndCondition condition) {
+		this.UserMessageNode.Text = condition == ReadOnlyMainSceneController.GameEndCondition.OnlyPlayer1UnitsRemain
+			? "You Win!"
+			: "Game Over";
+		this.UserMessageNode.Show();
+		return Task.CompletedTask;
 	}
 }

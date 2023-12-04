@@ -14,4 +14,7 @@ public partial class UnitTypeQueen : UnitType
 			)
             .Where(position => !grid.GetUnitAtPosition(position, out UnitInfo? other) || other.Team != unit.Team)
             .ToArray();
+
+    public override Vector2I[] GetMoveThreatenedPositions(UnitInfo unit, Vector2I position)
+		=> new Vector2I[] { position };
 }

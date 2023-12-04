@@ -43,6 +43,11 @@ public partial class MapGridNode : Node2D
 		return false;
 	}
 
+	public bool GetUnitNode(UnitInfo unit, [NotNullWhen(true)] out MapUnitNode? node) {
+		node = this.UnitMap.Forward[unit];
+		return node != null;
+	}
+
 	public static int GetTileZIndex(Vector2I position) {
 		return (position.X - position.Y) * 10;
 	}
